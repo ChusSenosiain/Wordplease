@@ -54,3 +54,19 @@ class BlogsView(View):
 
         return render(request, 'blogs/blog_list.html', context)
 
+
+class BlogView(View):
+
+    def get(self, request, pk):
+
+        try:
+            user = User.objects.get(pk=pk)
+            context = {
+                'user':user,
+            }
+
+            return render(request, 'blogs/blog_detail.html', context)
+
+        except User.DoesNotExist:
+            return HttpResponseNotFound('No existe el blog')
+
