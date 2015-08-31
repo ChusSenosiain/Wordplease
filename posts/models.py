@@ -16,7 +16,7 @@ class Category(models.Model):
 
 
     def __unicode__(self):
-        return self.name
+        return self.title
 
 
 class Post(models.Model):
@@ -24,7 +24,7 @@ class Post(models.Model):
     owner = models.ForeignKey(User)
     created_on = models.DateTimeField(auto_now_add=True)
     modified_on = models.DateTimeField(auto_now_add=True)
-    visibility = models.CharField(max_length=2, choices=VISIBILITY, default=DEFAULT_VISIBILITY)
+    visibility = models.CharField(max_length=3, choices=VISIBILITY, default=DEFAULT_VISIBILITY)
     title = models.CharField(max_length=255)
     summary = models.TextField()
     content = models.TextField()
@@ -32,7 +32,7 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category)
 
     def __unicode__(self):
-        return self.name
+        return self.title
 
 
 

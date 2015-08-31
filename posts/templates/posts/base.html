@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block 'title' %} Bienvenido a Wordplease {% endblock %}</title>
+</head>
+<body>
+    {% include 'posts/menu.html' %}
+    {% block 'content' %}
+
+    {% endblock %}
+<hr>
+Wordplease Inc. &copy: 2015
+</body>
+</html>
