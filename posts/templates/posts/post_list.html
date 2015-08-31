@@ -1,5 +1,9 @@
 {% for post in postlist %}
     <a href="{% url 'post_detail' post.pk %}">
-        <img src="{{ post.url }}" alt="{{post.content}}" title="{{post.title}}" >
+        <p>{{post.modified_on}}</p>
+        <h1>{{post.title}}</h1>
+        <p>{{post.summary}}</p>
+        <p><strong>Autor:</strong> {{post.owner.first_name}} {{post.owner.last_name}}</p>
+        <img src="{{ post.url }}">
     </a>
 {% endfor %}

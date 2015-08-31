@@ -1,4 +1,5 @@
 #encoding:UTF-8
+from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
@@ -38,3 +39,18 @@ class PostView(View):
 
         except Post.DoesNotExist:
             return HttpResponseNotFound('No existe el post')
+
+
+
+class BlogsView(View):
+
+    def get(self, request):
+
+        blogs = User.objects.all()
+
+        context = {
+            'bloglist':blogs,
+        }
+
+        return render(request, 'blogs/blog_list.html', context)
+
