@@ -10,8 +10,8 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.utils.decorators import method_decorator
-from django.views.generic import View, ListView
-from posts.forms import PostForm, loginForm
+from django.views.generic import View, ListView, FormView
+from posts.forms import PostForm, loginForm, SignUpForm
 from posts.models import Post
 from wordplease.settings import PUBLIC
 
@@ -127,6 +127,21 @@ class LoginView(View):
 
 
         return render(request, 'users/login.html', context)
+
+
+
+class SignupView(FormView):
+
+    template_name = 'users/signup.html'
+    form_class = SignUpForm
+
+    def form_valid(self, form):
+        form.save()
+        username = form.cleaned_data.get('username', '')
+        password = form.cleaned_data.get('password1', '')
+        user = authenticate(username=username, password=password)
+        login(self.request, user)
+        return redirect('home')
 
 
 class LogoutView(View):
