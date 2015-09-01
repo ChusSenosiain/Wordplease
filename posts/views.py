@@ -1,10 +1,12 @@
 #encoding:UTF-8
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
 # Create your views here.
 from django.views.generic import View
+from posts.forms import PostForm
 from posts.models import Post
 from wordplease.settings import PUBLIC
 
@@ -73,4 +75,36 @@ class BlogView(View):
 
         except User.DoesNotExist:
             return HttpResponseNotFound('No existe el blog')
+
+
+
+class CreatePostView(View):
+
+    def get(self, request):
+
+        form = PostForm()
+        context = {
+            'form': form
+        }
+
+        return render(request, 'posts/new_post.html', context)
+
+    def post(self, request):
+
+        messages = ''
+
+        post_with_user = Post(owner=request.user)
+        form = PostForm(request.POST, instance=post_with_user)
+        if form.is_valid():
+            new_post = form.save()
+            messages = 'Post guardado! <a href="{0}">Ver post</a>'.format(reverse('post_detail', args=[request.user.username, new_post.pk]))
+            form = PostForm()
+
+        context = {
+            'form': form,
+            'message': messages
+        }
+
+        return render(request, 'posts/new_post.html', context)
+
 

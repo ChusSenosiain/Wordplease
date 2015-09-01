@@ -1,0 +1,20 @@
+{% extends 'posts/base.html' %}
+{% block 'content' %}
+
+    <h1>Crear post</h1>
+
+    {% if message %}
+        <p style="color:red">{{ message|safe }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Crear</button>
+    </form>
+
+
+{% endblock %}
+

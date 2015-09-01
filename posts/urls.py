@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^blogs/(?P<username>\w+)/(?P<pk>[0-9]+)$', views.PostView.as_view(), name='post_detail'),
     url(r'^blogs$', views.BlogsView.as_view(), name='blogs'),
     url(r'^blogs/(?P<username>\w+)', views.BlogView.as_view(), name='blog_detail'),
+    url(r'^new-post', views.CreatePostView.as_view(), name='new_post'),
 )
