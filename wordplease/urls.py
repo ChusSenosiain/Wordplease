@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 import posts.urls
+import posts.api_urls
 
 
 urlpatterns = [
@@ -24,4 +25,7 @@ urlpatterns = [
 
     # Web URLS
     url(r'', include(posts.urls)),
+
+    # API URLS
+    url(r'^api/1.0/', include(posts.api_urls),),
 ]

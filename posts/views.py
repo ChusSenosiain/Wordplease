@@ -120,6 +120,7 @@ class LoginView(View):
                 if user.is_active:
                     login(request, user)
                     return redirect('home')
+
                 else:
                     context['errors'] = 'El usuario no está activo'
             else:

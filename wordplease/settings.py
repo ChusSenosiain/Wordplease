@@ -123,5 +123,19 @@ VISIBILITY = (
 DEFAULT_VISIBILITY = PUBLIC
 
 
-# Categories
+
+REST_FRAMEWORK = {
+    "PAGINATE_BY": 3,
+    "PAGINATE_BY_PARAM": "page_size",
+    "MAX_PAGINATE_BY": 100,
+
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+}
+
 

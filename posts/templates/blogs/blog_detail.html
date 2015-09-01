@@ -1,7 +1,7 @@
 {% extends 'posts/base.html' %}
 {% block 'content' %}
 
-    <h1>Author: {{ user.first_name }}</h1>
+    <h1>Author: {{ user.username }}</h1>
 
     {% if postlist|length > 0 %}
 
