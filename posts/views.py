@@ -26,7 +26,7 @@ class HomeView(View):
 
 class PostView(View):
 
-    def get(self, request, pk):
+    def get(self, request, username, pk):
 
         try:
             post = Post.objects.get(pk=pk)

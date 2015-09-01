@@ -1,5 +1,5 @@
 {% for post in postlist %}
-    <a href="{% url 'post_detail' post.pk %}">
+    <a href="{% url 'post_detail' post.owner.username post.pk %}">
         <p>{{post.modified_on}}</p>
         <h1>{{post.title}}</h1>
         <p>{{post.summary}}</p>
