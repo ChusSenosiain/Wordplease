@@ -61,8 +61,10 @@ class BlogView(View):
 
         try:
             user = User.objects.get(pk=pk)
+            posts = Post.objects.filter(owner=user)
             context = {
-                'user':user,
+                'user': user,
+                'postlist': posts,
             }
 
             return render(request, 'blogs/blog_detail.html', context)
