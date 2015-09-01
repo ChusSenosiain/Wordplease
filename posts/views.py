@@ -1,12 +1,16 @@
 #encoding:UTF-8
+from django.contrib.auth import login
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.utils.decorators import method_decorator
 from django.views.generic import View
-from posts.forms import PostForm
+from posts.forms import PostForm, loginForm
 from posts.models import Post
 from wordplease.settings import PUBLIC
 
@@ -78,8 +82,45 @@ class BlogView(View):
 
 
 
+class LoginView(View):
+
+    def get(self, request):
+
+        form = loginForm(request.POST or None)
+        context = {
+            'form': form
+        }
+
+        return render(request, 'users/login.html', context)
+
+    def post(self, request):
+
+        form = loginForm(request.POST)
+        context = {
+            'form': form
+        }
+
+        if form.is_valid():
+            user_username = form.cleaned_data.get('username','')
+            user_password =  form.cleaned_data.get('password', '')
+            user = authenticate(username=user_username, password=user_password)
+
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect(reverse('blog_detail', args={user.username}))
+                else:
+                    context['errors'] = 'El usuario no está activo'
+            else:
+                context['errors'] = 'Usuario o contraseña incorrectos'
+
+
+        return render(request, 'users/login.html', context)
+
+
 class CreatePostView(View):
 
+    @method_decorator(login_required(login_url='login'))
     def get(self, request):
 
         form = PostForm()
@@ -89,6 +130,7 @@ class CreatePostView(View):
 
         return render(request, 'posts/new_post.html', context)
 
+    @method_decorator(login_required(login_url='login'))
     def post(self, request):
 
         messages = ''

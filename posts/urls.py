@@ -9,4 +9,6 @@ urlpatterns = patterns('',
     url(r'^blogs$', views.BlogsView.as_view(), name='blogs'),
     url(r'^blogs/(?P<username>\w+)', views.BlogView.as_view(), name='blog_detail'),
     url(r'^new-post', views.CreatePostView.as_view(), name='new_post'),
+    url(r'^login/$', views.LoginView.as_view(), name='login'),
+
 )
