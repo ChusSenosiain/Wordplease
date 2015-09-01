@@ -1,5 +1,6 @@
 #encoding:UTF-8
 from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -9,7 +10,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.utils.decorators import method_decorator
-from django.views.generic import View
+from django.views.generic import View, ListView
 from posts.forms import PostForm, loginForm
 from posts.models import Post
 from wordplease.settings import PUBLIC
@@ -82,6 +83,16 @@ class BlogView(View):
 
 
 
+class ProfileView(View):
+
+    @method_decorator(login_required(login_url='login'))
+    def get(self, request):
+        context = {
+            'username': request.user.username
+        }
+        return redirect('blog_detail', username=request.user.username)
+
+
 class LoginView(View):
 
     def get(self, request):
@@ -108,7 +119,7 @@ class LoginView(View):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect(reverse('blog_detail', args={user.username}))
+                    return redirect('home')
                 else:
                     context['errors'] = 'El usuario no está activo'
             else:
@@ -116,6 +127,13 @@ class LoginView(View):
 
 
         return render(request, 'users/login.html', context)
+
+
+class LogoutView(View):
+    def get(self, request):
+        if request.user.is_authenticated():
+            logout(request)
+        return redirect(reverse('home'))
 
 
 class CreatePostView(View):
@@ -148,5 +166,4 @@ class CreatePostView(View):
         }
 
         return render(request, 'posts/new_post.html', context)
-
 
