@@ -1,105 +1,66 @@
 #encoding:UTF-8
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.viewsets import ModelViewSet
 from posts.models import Post
 from posts.permissions import UserPermission, PostPermission
-from posts.serializers import UserSerializer, PostSerializer
+from posts.serializers import UserSerializer, PostSerializer, PostListSerializer, PostDetailSerializer, BlogSerializer
 from wordplease.settings import PUBLIC
 
 __author__ = 'Chus'
 
 
-class UserViewSet(viewsets.ViewSet):
-
+class UserViewSet(ModelViewSet):
     permission_classes = (UserPermission,)
+    filter_backends = (OrderingFilter, SearchFilter)
+    ordering_fields = ('username')
+    search_fields = ('username')
 
-    def list(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
+    def get_serializer_class(self):
+        return UserSerializer
 
-    def create(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def retrieve(self, request, pk):
-        user = get_object_or_404(User, pk=pk)
-        self.check_object_permissions(request, user)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-
-    def update(self, request, pk):
-        user = get_object_or_404(User, pk=pk)
-        self.check_object_permissions(request, user)
-        serializer = UserSerializer(instance=user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk):
-        user = get_object_or_404(User, pk=pk)
-        self.check_object_permissions(request, user)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def get_queryset(self):
+        return User.objects.all()
 
 
-
-
-class PostViewSet(viewsets.ViewSet):
+class PostViewSet(ModelViewSet):
 
     permission_classes = (PostPermission,)
+    filter_backends = (OrderingFilter, SearchFilter)
+    ordering_fields = ('title', 'updated_date')
+    search_fields = ('title', 'content')
 
-    def list(self, request):
+    def get_serializer_class(self):
+        if self.action:
+            if self.action.lower() == 'list':
+                return PostListSerializer
+            elif self.action.lower() == 'retrieve':
+                return PostDetailSerializer
 
-        user = request.user
+        return PostSerializer
+
+    def get_queryset(self):
+        user = self.request.user
 
         if (user.is_superuser):
             posts = Post.objects.all()
         else:
             posts = Post.objects.filter(Q(owner=user) | Q(visibility=PUBLIC))
 
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
+        return posts
 
-    def create(self, request):
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
-        self.check_object_permissions(request, post)
-        serializer = PostSerializer(post)
-        return Response(serializer.data)
+class BlogViewSet(ModelViewSet):
 
-    def update(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
-        self.check_object_permissions(request, post)
-        serializer = PostSerializer(instance=post, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    filter_backends = (OrderingFilter, SearchFilter)
+    ordering_fields = ('username')
+    search_fields = ('username', 'first_name')
 
-    def destroy(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
-        self.check_object_permissions(request, post)
-        post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def get_serializer_class(self):
+        return BlogSerializer
 
+    def get_queryset(self):
+        return User.objects.all()
 
 

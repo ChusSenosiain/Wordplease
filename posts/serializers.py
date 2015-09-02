@@ -1,107 +1,53 @@
 #encoding=UTF-8
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-from posts.models import Post
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+from posts.models import Post, Category
 
 __author__ = 'Chus'
 
 
-from rest_framework import serializers
+# User Serializers
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        read_only_fields = ('id')
+        fields = ('id', 'username', 'first_name', 'second_name', 'email', 'password')
 
+# Blog Serializers
+class BlogSerializer(ModelSerializer):
+    class Meta:
+        model = Post
+        url = serializers.HyperlinkedIdentityField(view_name='blogs')
+        fields = ('username', 'url')
 
-class UserSerializer(serializers.Serializer):
+# Category Serializers
+class CategorySerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('title',)
 
-    # Retornamos el id de usuario
-    id = serializers.ReadOnlyField()
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
-    username = serializers.CharField()
-    email = serializers.CharField()
-    password = serializers.CharField()
+# Post Serializers
+class PostSerializer(ModelSerializer):
+    class Meta:
+        model = Post
+        exclude = ('owner',)
 
-    # Un serializer tiene que tener los metodos create y update
+class PostDetailSerializer(PostSerializer):
+    owner = UserSerializer(read_only=True)
+    categories = CategorySerializer(many=True)
 
-    def create(self, validated_data):
-
-        """
-        Crea una instancia de User a partir de los datos del
-        diccionario validated_data,
-        :param validated_data:
-        :return:
-        """
-        instance = User()
-        return self.update(instance, validated_data)
-
-
-    def update(self, instance, validated_data):
-
-        """
-        Actualiza una instancia de User a partir de los datos del
-        diccionario validated_data
-        :param instance:
-        :param validated_data:
-        :return:
-        """
-        instance.first_name = validated_data.get('first_name') # usamos get porque puede que no venga
-        instance.last_name = validated_data.get('last_name')
-        instance.username = validated_data.get('username')
-        instance.email = validated_data.get('email')
-
-        # password encripted
-        instance.password = make_password(validated_data.get('password'))
-
-        # Guardamos el objeto (ojo que en web se guarda solo, acordarse de que para api hay que guardarlo)
-        instance.save()
-
-        return instance
+class PostListSerializer(ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('title', 'url', 'summary', 'modified_on')
 
 
 
 
-class PostSerializer(serializers.Serializer):
-
-    # Retornamos el id de usuario
-    id = serializers.ReadOnlyField()
-    owner = serializers.CharField()
-    title = serializers.CharField()
-    url = serializers.URLField()
-    summary = serializers.CharField()
-    created_on = serializers.DateTimeField()
-    visibility  = serializers.CharField()
-
-    # Un serializer tiene que tener los metodos create y update
-
-    def create(self, validated_data):
-
-        """
-        Crea una instancia de User a partir de los datos del
-        diccionario validated_data,
-        :param validated_data:
-        :return:
-        """
-        instance = Post()
-        return self.update(instance, validated_data)
 
 
-    def update(self, instance, validated_data):
-
-        """
-        Actualiza una instancia de User a partir de los datos del
-        diccionario validated_data
-        :param instance:
-        :param validated_data:
-        :return:
-        """
-        instance.title = validated_data.get('title')
-        instance.image = validated_data.get('url')
-        instance.summary = validated_data.get('summary')
-        instance.created_at = validated_data.get('created_on')
-        instance.visibility = validated_data.get('visibility')
-        instance.owner = validated_data.get('owner')
 
 
-        # Guardamos el objeto (ojo que en web se guarda solo, acordarse de que para api hay que guardarlo)
-        instance.save()
-
-        return instance
 

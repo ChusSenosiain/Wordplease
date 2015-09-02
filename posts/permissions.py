@@ -30,9 +30,8 @@ class PostPermission(BasePermission):
     def has_permission(self, request, view):
         # solo si el usuario está autenticado puede crear un post
         if view.action and view.action.lower() == 'create':
-            return request.user.is_authenticated;
+            return request.user.is_authenticated
 
-        # Para que pase por has_object_permissions
         return True
 
     def has_object_permission(self, request, view, obj):
