@@ -14,7 +14,7 @@ class UserPermission(BasePermission):
         elif view.action:
             if view.action.lower() == 'create' and not request.user.is_authenticated():
                 return True
-            elif view.action.lower() in ['list', 'retrieve', 'update', 'destroy', 'partial_update']:
+            elif view.action.lower() in ['retrieve', 'update', 'destroy', 'partial_update']:
                 return True
 
         return False
@@ -33,7 +33,7 @@ class PostPermission(BasePermission):
             return request.user.is_authenticated;
 
         # Para que pase por has_object_permissions
-        return False
+        return True
 
     def has_object_permission(self, request, view, obj):
         # si el usuario es admin o el autor del post es el usuario autenticado, le dejo hacer sobre el post

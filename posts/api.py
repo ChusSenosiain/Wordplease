@@ -1,5 +1,6 @@
 #encoding:UTF-8
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -7,6 +8,7 @@ from rest_framework import status
 from posts.models import Post
 from posts.permissions import UserPermission, PostPermission
 from posts.serializers import UserSerializer, PostSerializer
+from wordplease.settings import PUBLIC
 
 __author__ = 'Chus'
 
@@ -58,7 +60,14 @@ class PostViewSet(viewsets.ViewSet):
     permission_classes = (PostPermission,)
 
     def list(self, request):
-        posts = Post.objects.all()
+
+        user = request.user
+
+        if (user.is_superuser):
+            posts = Post.objects.all()
+        else:
+            posts = Post.objects.filter(Q(owner=user) | Q(visibility=PUBLIC))
+
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
