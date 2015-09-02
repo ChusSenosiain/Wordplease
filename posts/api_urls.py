@@ -1,5 +1,5 @@
 #encoding:UTF-8
-from posts.api import UserViewSet
+from posts.api import UserViewSet, PostViewSet
 
 __author__ = 'Chus'
 
@@ -8,6 +8,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, base_name="user")
+router.register(r'posts', PostViewSet, base_name="post")
 
 urlpatterns = patterns('',
     # api urls
