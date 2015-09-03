@@ -2,6 +2,7 @@
 from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 from posts.models import Post
 from posts.permissions import UserPermission, PostPermission
@@ -51,7 +52,7 @@ class PostViewSet(ModelViewSet):
         return posts
 
 
-class BlogViewSet(ModelViewSet):
+class BlogViewSet(ListAPIView):
 
     filter_backends = (OrderingFilter, SearchFilter)
     ordering_fields = ('username')

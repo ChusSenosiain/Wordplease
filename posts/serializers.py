@@ -1,5 +1,4 @@
 #encoding=UTF-8
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -17,9 +16,11 @@ class UserSerializer(ModelSerializer):
 
 # Blog Serializers
 class BlogSerializer(ModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(view_name='blog_detail', lookup_field='username')
+
     class Meta:
-        model = Post
-        url = serializers.HyperlinkedIdentityField(view_name='blogs')
+        model = User
         fields = ('username', 'url')
 
 # Category Serializers
@@ -32,7 +33,6 @@ class CategorySerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     class Meta:
         model = Post
-        exclude = ('owner',)
 
 class PostDetailSerializer(PostSerializer):
     owner = UserSerializer(read_only=True)
