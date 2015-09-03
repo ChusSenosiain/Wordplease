@@ -1,4 +1,5 @@
 #encoding:UTF-8
+
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate
@@ -7,8 +8,6 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect
-
-# Create your views here.
 from django.utils.decorators import method_decorator
 from django.views.generic import View, ListView, FormView
 from posts.forms import PostForm, loginForm, SignUpForm
@@ -16,12 +15,13 @@ from posts.models import Post
 from wordplease.settings import PUBLIC
 
 
+# Home Page: shows the last 5 post ordered by update date
 class HomeView(View):
 
     def get(self, request):
 
-        #Get the public posts, desc order
-        posts = Post.objects.filter(visibility=PUBLIC).order_by('-created_on')
+        # Get the public posts, desc order
+        posts = Post.objects.filter(visibility=PUBLIC).order_by('-modified_on')
         context = {
             'postlist':posts[:5],
         }
@@ -29,8 +29,7 @@ class HomeView(View):
         return render(request, 'posts/home.html', context)
 
 
-
-
+# Post detail View
 class PostView(View):
 
     def get(self, request, username, pk):
@@ -48,7 +47,7 @@ class PostView(View):
             return HttpResponseNotFound('No existe el post')
 
 
-
+# Blog list View: a list with all the blogs
 class BlogsView(View):
 
     def get(self, request):
@@ -63,14 +62,14 @@ class BlogsView(View):
 
 
 
-
+# Blog detail: shows a list of blog's posts.
 class BlogView(View):
 
     def get(self, request, username):
 
         try:
             user = User.objects.filter(username=username)
-            posts = Post.objects.filter(owner=user)
+            posts = Post.objects.filter(owner=user).order_by('-modified_on')
             context = {
                 'user': user,
                 'postlist': posts,
@@ -82,7 +81,7 @@ class BlogView(View):
             return HttpResponseNotFound('No existe el blog')
 
 
-
+# User profile view: shows the user blog
 class ProfileView(View):
 
     @method_decorator(login_required(login_url='login'))
@@ -93,6 +92,7 @@ class ProfileView(View):
         return redirect('blog_detail', username=request.user.username)
 
 
+# Login view
 class LoginView(View):
 
     def get(self, request):
@@ -130,7 +130,7 @@ class LoginView(View):
         return render(request, 'users/login.html', context)
 
 
-
+# Sign Up, create an user
 class SignupView(FormView):
 
     template_name = 'users/signup.html'
@@ -152,6 +152,7 @@ class LogoutView(View):
         return redirect(reverse('home'))
 
 
+# Create a post: only logged users can create a post
 class CreatePostView(View):
 
     @method_decorator(login_required(login_url='login'))

@@ -1,18 +1,18 @@
 #encoding=UTF-8
+__author__ = 'Chus'
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from posts.models import Post, Category
-
-__author__ = 'Chus'
-
 
 # User Serializers
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         read_only_fields = ('id')
-        fields = ('id', 'username', 'first_name', 'second_name', 'email', 'password')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password')
+
 
 # Blog Serializers
 class BlogSerializer(ModelSerializer):
@@ -23,11 +23,15 @@ class BlogSerializer(ModelSerializer):
         model = User
         fields = ('username', 'url')
 
+
+
 # Category Serializers
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = ('title',)
+
+
 
 # Post Serializers
 class PostSerializer(ModelSerializer):

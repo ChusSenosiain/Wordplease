@@ -1,9 +1,8 @@
 #encoding=UTF-8
-from django.contrib.auth.forms import UserCreationForm
-from posts.models import Post
-
 __author__ = 'Chus'
 
+from django.contrib.auth.forms import UserCreationForm
+from posts.models import Post
 from django import forms
 
 class loginForm(forms.Form):

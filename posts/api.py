@@ -1,4 +1,6 @@
 #encoding:UTF-8
+__author__ = 'Chus'
+
 from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -9,9 +11,9 @@ from posts.permissions import UserPermission, PostPermission
 from posts.serializers import UserSerializer, PostSerializer, PostListSerializer, PostDetailSerializer, BlogSerializer
 from wordplease.settings import PUBLIC
 
-__author__ = 'Chus'
 
 
+# Users
 class UserViewSet(ModelViewSet):
     permission_classes = (UserPermission,)
     filter_backends = (OrderingFilter, SearchFilter)
@@ -24,7 +26,7 @@ class UserViewSet(ModelViewSet):
     def get_queryset(self):
         return User.objects.all()
 
-
+# Posts
 class PostViewSet(ModelViewSet):
 
     permission_classes = (PostPermission,)
@@ -44,14 +46,16 @@ class PostViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
 
+        # If the user is superuser, can read all posts
         if (user.is_superuser):
             posts = Post.objects.all()
+        # The other users only can read their own posts or PUBLIC posts from others
         else:
             posts = Post.objects.filter(Q(owner=user) | Q(visibility=PUBLIC))
 
         return posts
 
-
+# Blogs
 class BlogViewSet(ListAPIView):
 
     filter_backends = (OrderingFilter, SearchFilter)

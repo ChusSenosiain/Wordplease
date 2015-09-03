@@ -1,19 +1,16 @@
+#encoding=UTF-8
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
-# Create your models here.
-
-
 VISIBILITY = getattr(settings, 'VISIBILITY', ())
 DEFAULT_VISIBILITY = getattr(settings, 'DEFAULT_VISIBILITY', ())
-
 
 class Category(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-
 
     def __unicode__(self):
         return self.title
