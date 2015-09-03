@@ -20,7 +20,6 @@ class HomeView(PostQuerySet, ListView):
     template_name = 'posts/home.html'
 
 
-
 # Post detail View
 class PostView(View):
 
@@ -60,10 +59,10 @@ class BlogView(View):
     def get(self, request, username):
 
         try:
-            user = User.objects.filter(username=username)
-            posts = Post.objects.filter(owner=user).order_by('-modified_on')
+            owner = User.objects.get(username=username)
+            posts = Post.objects.filter(owner=owner).order_by('-modified_on')
             context = {
-                'user': user,
+                'owner': owner,
                 'object_list': posts,
             }
 
