@@ -1,10 +1,10 @@
 {% extends 'posts/base.html' %}
 {% block 'content' %}
 
-    <h1>Bienvenido a Wordplease</h1>
+    <h1>Wordplease</h1>
 
     {% if bloglist|length > 0 %}
-        <h2>Ultimos blogs</h2>
+        <h2>Listado de blogs</h2>
         {% for User in bloglist %}
             <a href="{% url 'blog_detail' User %}">
             <p><strong>Blog de:</strong> {{User.first_name}} {{User.last_name}}</p>
