@@ -8,11 +8,22 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}"/>
 </head>
 <body>
-    {% include 'posts/menu.html' %}
-    {% block 'content' %}
 
-    {% endblock %}
-<hr>
-Wordplease Inc. &copy: 2015
+    {% include 'posts/menu.html' %}
+
+    <div class="container">
+        {% block 'content' %}
+        {% endblock %}
+    </div>
+
+    <hr>
+
+    <footer class="container">
+        <div class="row">
+            <p class="col-xs-12">
+                Wordplease Inc. &copy: 2015
+            </p>
+        </div>
+    </footer>
 </body>
 </html>

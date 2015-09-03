@@ -2,14 +2,7 @@
 {% block 'content' %}
 
     <h1>Bienvenido a Wordplease</h1>
-
-    {% if postlist|length > 0 %}
-
-        <h2>Ultimos post publicados</h2>
-        {% include 'posts/post_list.html' %}
-
-    {% endif %}
-
+    {% include 'posts/post_list.html' %}
 
 {% endblock %}
 

@@ -1,13 +1,7 @@
 {% extends 'posts/base.html' %}
 {% block 'content' %}
 
-    <h1>Author: {{ user.username }}</h1>
-
-    {% if postlist|length > 0 %}
-
-        <h2>Ultimos post publicados</h2>
-        {% include 'posts/post_list.html' %}
-
-    {% endif %}
+    <h1>Blog de: {{ user.username }} | {{ user.first_name }} {{ user.second_name }}</h1>
+    {% include 'posts/post_list.html' %}
 
 {% endblock %}

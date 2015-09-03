@@ -1,9 +1,14 @@
-{% for post in postlist %}
-    <a href="{% url 'post_detail' post.owner.username post.pk %}">
-        <p>{{post.modified_on}}</p>
-        <h1>{{post.title}}</h1>
-        <p>{{post.summary}}</p>
-        <p><strong>Autor:</strong> {{post.owner.first_name}} {{post.owner.last_name}}</p>
+{% if object_list|length > 0 %}
+    <h2>Últimas publicaciones</h2>
+    {% for post in object_list %}
+        <a href="{% url 'post_detail' post.owner.username post.pk %}">
+            <h1>{{post.title}}</h1>
+        </a>
+        <p>{{post.modified_on}} By <a href="{% url 'blog_detail' post.owner.username %}"> {{post.owner.first_name}} {{post.owner.last_name}} </a></p>
+        <h3>{{post.summary}}</h3>
         <img src="{{ post.url }}">
-    </a>
-{% endfor %}
+        <hr>
+    {% endfor %}
+{% else %}
+    <h2>No hay publicaciones</h2>
+{% endif %}

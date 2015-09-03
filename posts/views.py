@@ -12,21 +12,13 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View, ListView, FormView
 from posts.forms import PostForm, loginForm, SignUpForm
 from posts.models import Post
-from wordplease.settings import PUBLIC
+from posts.querysets import PostQuerySet
 
 
 # Home Page: shows the last 5 post ordered by update date
-class HomeView(View):
+class HomeView(PostQuerySet, ListView):
+    template_name = 'posts/home.html'
 
-    def get(self, request):
-
-        # Get the public posts, desc order
-        posts = Post.objects.filter(visibility=PUBLIC).order_by('-modified_on')
-        context = {
-            'postlist':posts[:5],
-        }
-
-        return render(request, 'posts/home.html', context)
 
 
 # Post detail View
@@ -72,7 +64,7 @@ class BlogView(View):
             posts = Post.objects.filter(owner=user).order_by('-modified_on')
             context = {
                 'user': user,
-                'postlist': posts,
+                'object_list': posts,
             }
 
             return render(request, 'blogs/blog_detail.html', context)
@@ -183,4 +175,5 @@ class CreatePostView(View):
         }
 
         return render(request, 'posts/new_post.html', context)
+
 

@@ -1,11 +1,11 @@
 {% extends 'posts/base.html' %}
 
-
 {% block 'content' %}
 
     <h1>{{post.title}}</h1>
-    <p>{{post.summary}}</p>
+    <img src="{{ post.url }}">
+    <h3>{{post.summary}}</h3>
     <p>{{post.content}}</p>
-    <p><strong>Autor:</strong> {{post.owner.first_name}} {{post.owner.last_name}}</p>
+    <p>By <a href="{% url 'blog_detail' post.owner.username %}">{{post.owner.first_name}} {{post.owner.last_name}}</a></p>
 
 {% endblock %}
