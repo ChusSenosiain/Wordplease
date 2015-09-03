@@ -1,7 +1,7 @@
 {% extends 'posts/base.html' %}
 {% block content %}
 
-    <h1>Blog de: {{ owner.username }} | {{ owner.first_name }} {{ owner.second_name }}</h1>
+    <h1>El blog de {{ owner.username }}</h1>
     {% include 'posts/post_list.html' %}
 
 {% endblock %}

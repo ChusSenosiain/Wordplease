@@ -1,8 +1,7 @@
 #encoding:UTF-8
-from posts.querysets import PostQuerySet
-
 __author__ = 'Chus'
 
+from posts.querysets import PostQuerySet
 from django.contrib.auth.models import User
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView

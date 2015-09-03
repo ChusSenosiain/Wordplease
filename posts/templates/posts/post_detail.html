@@ -3,9 +3,10 @@
 {% block content %}
 
     <h1>{{post.title}}</h1>
-    <img src="{{ post.url }}">
+    <p>{{post.modified_on}} By <a href="{% url 'blog_detail' post.owner.username %}"> {{post.owner.username}}</a></p>
     <h3>{{post.summary}}</h3>
+    <img src="{{ post.url }}">
     <p>{{post.content}}</p>
-    <p>By <a href="{% url 'blog_detail' post.owner.username %}">{{post.owner.first_name}} {{post.owner.last_name}}</a></p>
+    <p>{{post.modified_on}} By <a href="{% url 'blog_detail' post.owner.username %}"> {{post.owner.username}}</a></p>
 
 {% endblock %}

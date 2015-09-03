@@ -7,11 +7,11 @@
         <h2>Listado de blogs</h2>
         {% for User in bloglist %}
             <a href="{% url 'blog_detail' User %}">
-            <p><strong>Blog de:</strong> {{User.first_name}} {{User.last_name}}</p>
+            <p><strong>El blog de </strong> {{User.username}}</p>
             </a>
         {% endfor %}
     {% else  %}
-        <p>No hay blogs</p>
+        <p>No hay blogs!</p>
     {% endif %}
 
 

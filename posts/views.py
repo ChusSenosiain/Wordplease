@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
@@ -16,6 +17,9 @@ from posts.querysets import PostQuerySet
 
 
 # Home Page: shows the last 5 post ordered by update date
+from wordplease.settings import PUBLIC
+
+
 class HomeView(PostQuerySet, ListView):
     template_name = 'posts/home.html'
 
@@ -60,7 +64,12 @@ class BlogView(View):
 
         try:
             owner = User.objects.get(username=username)
-            posts = Post.objects.filter(owner=owner).order_by('-modified_on')
+
+            if request.user.is_superuser or request.user == owner:
+                posts = Post.objects.filter(owner=owner).order_by('-modified_on')
+            else:
+                posts = Post.objects.filter(Q(owner=owner) & Q(visibility=PUBLIC)).order_by('-modified_on')
+
             context = {
                 'owner': owner,
                 'object_list': posts,
