@@ -47,7 +47,7 @@ class PostSerializer(ModelSerializer):
 
 
 class PostDetailSerializer(ModelSerializer):
-    owner = UserBasicSerializer(read_only=True)
+    owner = UserBasicSerializer()
     categories = CategorySerializer(many=True)
     class Meta:
         model = Post
