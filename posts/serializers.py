@@ -14,6 +14,12 @@ class UserSerializer(ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password')
 
 
+class UserBasicSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name')
+
+
 # Blog Serializers
 class BlogSerializer(ModelSerializer):
 
@@ -41,16 +47,17 @@ class PostSerializer(ModelSerializer):
 
 
 class PostDetailSerializer(ModelSerializer):
-    owner = UserSerializer(read_only=True)
+    owner = UserBasicSerializer(read_only=True)
     categories = CategorySerializer(many=True)
     class Meta:
         model = Post
 
 
 class PostListSerializer(ModelSerializer):
+    owner = UserBasicSerializer()
     class Meta:
         model = Post
-        fields = ('id', 'title', 'url', 'summary', 'modified_on')
+        fields = ('id', 'title', 'url', 'summary', 'modified_on', 'owner')
 
 
 

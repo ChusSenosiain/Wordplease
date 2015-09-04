@@ -1,8 +1,8 @@
 #encoding:UTF-8
-from django.contrib.auth.hashers import make_password
 
 __author__ = 'Chus'
 
+from django.contrib.auth.hashers import make_password
 from posts.querysets import PostQuerySet, BlogQuerySet
 from django.contrib.auth.models import User
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -19,16 +19,13 @@ def update_password(serializer):
 
 # Users
 class UserViewSet(ModelViewSet):
+
+    queryset = User.objects.all()
     permission_classes = (UserPermission,)
     filter_backends = (OrderingFilter, SearchFilter)
-    ordering_fields = ('username')
-    search_fields = ('username')
-
-    def get_serializer_class(self):
-        return UserSerializer
-
-    def get_queryset(self):
-        return User.objects.all()
+    ordering_fields = ('username',)
+    search_fields = ('username',)
+    serializer_class = UserSerializer
 
     # Password will be encripted after save it
     def perform_create(self, serializer):
@@ -64,13 +61,10 @@ class PostViewSet(PostQuerySet, ModelViewSet):
 
 # Blogs
 class BlogViewSet(BlogQuerySet, ListAPIView):
-
     filter_backends = (OrderingFilter, SearchFilter)
-    ordering_fields = ('username')
+    ordering_fields = ('username',)
     search_fields = ('username', 'first_name')
-
-    def get_serializer_class(self):
-        return BlogSerializer
+    serializer_class = BlogSerializer
 
 
 
