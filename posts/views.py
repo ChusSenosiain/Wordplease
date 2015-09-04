@@ -13,15 +13,16 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View, ListView, FormView
 from posts.forms import PostForm, loginForm, SignUpForm
 from posts.models import Post
-from posts.querysets import PostQuerySet
-
-
-# Home Page: shows the last 5 post ordered by update date
+from posts.querysets import PostQuerySet, BlogQuerySet
 from wordplease.settings import PUBLIC
 
-
+# Home Page: shows the last 5 post ordered by update date
 class HomeView(PostQuerySet, ListView):
     template_name = 'posts/home.html'
+
+# Blog list View: a list with all the blogs
+class BlogsView(BlogQuerySet, ListView):
+    template_name = 'blogs/blog_list.html'
 
 
 # Post detail View
@@ -41,19 +42,6 @@ class PostView(View):
         except Post.DoesNotExist:
             return HttpResponseNotFound('No existe el post')
 
-
-# Blog list View: a list with all the blogs
-class BlogsView(View):
-
-    def get(self, request):
-
-        blogs = User.objects.all()
-
-        context = {
-            'bloglist':blogs,
-        }
-
-        return render(request, 'blogs/blog_list.html', context)
 
 
 

@@ -29,7 +29,7 @@ class BlogSerializer(ModelSerializer):
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = ('title',)
+        fields = ('id', 'title')
 
 
 
@@ -37,15 +37,20 @@ class CategorySerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     class Meta:
         model = Post
+        fields = ('title', 'url', 'summary', 'content', 'categories')
 
-class PostDetailSerializer(PostSerializer):
+
+class PostDetailSerializer(ModelSerializer):
     owner = UserSerializer(read_only=True)
     categories = CategorySerializer(many=True)
+    class Meta:
+        model = Post
+
 
 class PostListSerializer(ModelSerializer):
     class Meta:
         model = Post
-        fields = ('title', 'url', 'summary', 'modified_on')
+        fields = ('id', 'title', 'url', 'summary', 'modified_on')
 
 
 

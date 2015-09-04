@@ -1,7 +1,9 @@
 #encoding:UTF-8
+from django.contrib.auth.hashers import make_password
+
 __author__ = 'Chus'
 
-from posts.querysets import PostQuerySet
+from posts.querysets import PostQuerySet, BlogQuerySet
 from django.contrib.auth.models import User
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView
@@ -9,6 +11,10 @@ from rest_framework.viewsets import ModelViewSet
 from posts.permissions import UserPermission, PostPermission
 from posts.serializers import UserSerializer, PostSerializer, PostListSerializer, PostDetailSerializer, BlogSerializer
 
+
+def update_password(serializer):
+    password = make_password(serializer.validated_data.get('password'))
+    serializer.save(password=password)
 
 
 # Users
@@ -23,6 +29,15 @@ class UserViewSet(ModelViewSet):
 
     def get_queryset(self):
         return User.objects.all()
+
+    # Password will be encripted after save it
+    def perform_create(self, serializer):
+        update_password(serializer)
+
+    def perform_update(self, serializer):
+        update_password(serializer)
+
+
 
 # Posts
 class PostViewSet(PostQuerySet, ModelViewSet):
@@ -41,8 +56,14 @@ class PostViewSet(PostQuerySet, ModelViewSet):
 
         return PostSerializer
 
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+
 # Blogs
-class BlogViewSet(ListAPIView):
+class BlogViewSet(BlogQuerySet, ListAPIView):
 
     filter_backends = (OrderingFilter, SearchFilter)
     ordering_fields = ('username')
@@ -51,7 +72,5 @@ class BlogViewSet(ListAPIView):
     def get_serializer_class(self):
         return BlogSerializer
 
-    def get_queryset(self):
-        return User.objects.all()
 
 

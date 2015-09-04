@@ -3,11 +3,11 @@
 
     <h1>Wordplease</h1>
 
-    {% if bloglist|length > 0 %}
+    {% if object_list|length > 0 %}
         <h2>Listado de blogs</h2>
-        {% for User in bloglist %}
-            <a href="{% url 'blog_detail' User %}">
-            <p><strong>El blog de </strong> {{User.username}}</p>
+        {% for User in object_list %}
+
+            <p>El blog de <strong><a href="{% url 'blog_detail' User %}"> {{User.username}}</a></strong></p>
             </a>
         {% endfor %}
     {% else  %}
